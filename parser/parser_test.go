@@ -1,9 +1,11 @@
 package parser
 
 import (
+	"testing"
+
 	"github.com/manhtai/goin/ast"
 	"github.com/manhtai/goin/lexer"
-	"testing"
+	"github.com/manhtai/goin/token"
 )
 
 // checkParserErrors print parser errors list to test console for us to inspect
@@ -109,5 +111,26 @@ return 993322;
 				returnStmt.TokenLiteral(),
 			)
 		}
+	}
+}
+
+func TestString(t *testing.T) {
+	program := &ast.Program{
+		Statements: []ast.Statement{
+			&ast.LetStatement{
+				Token: token.Token{Type: token.LET, Literal: "let"},
+				Name: &ast.Identifier{
+					Token: token.Token{Type: token.IDENT, Literal: "myVar"},
+					Value: "myVar",
+				},
+				Value: &ast.Identifier{
+					Token: token.Token{Type: token.IDENT, Literal: "anotherVar"},
+					Value: "anotherVar",
+				},
+			},
+		},
+	}
+	if program.String() != "let myVar = anotherVar;" {
+		t.Errorf("program.String() wrong. got=%q", program.String())
 	}
 }
