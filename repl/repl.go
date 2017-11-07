@@ -7,6 +7,7 @@ import (
 
 	"github.com/manhtai/goin/eval"
 	"github.com/manhtai/goin/lexer"
+	"github.com/manhtai/goin/object"
 	"github.com/manhtai/goin/parser"
 )
 
@@ -16,6 +17,8 @@ const PROMPT = ">>> "
 // Start read text from stdin and print token to stdout
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
+
 	for {
 		fmt.Printf(PROMPT)
 		scanned := scanner.Scan()
@@ -33,7 +36,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := eval.Eval(program)
+		evaluated := eval.Eval(program, env)
 
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
